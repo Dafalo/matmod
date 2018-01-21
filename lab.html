@@ -382,42 +382,7 @@ void main (void) {
 		Water.vertexNormalBuffer 	= null;
 		Water.vertexHeightBuffer 	= null;
 
-		/*var VertexShader = `
-				uniform float u_eye_height;
-				uniform mat4 u_world_view;
-
-				attribute vec2 a_position;
-				attribute float a_height;
-				attribute vec2 a_normal;
-
-				varying vec3 v_normal;
-				varying vec3 v_position;
-				varying vec3 v_from_eye;
-
-				vec4 to_clipspace(vec3 position) {
-					vec4 position_view=u_world_view*vec4(v_position,1);
-					float z=1.0-(1.0+position_view.z)/(1.0+u_eye_height);
-					return vec4(position_view.xy,-position_view.z*z/2.0,z);
-				}
-
-				vec3 from_water_to_eye(vec3 position) {
-					vec4 eye_view=vec4(0.0,0.0,u_eye_height,1.0);
-					vec4 eye=eye_view*u_world_view;
-					return position-eye.xyz;
-				}
-
-				void main (void) {
-					// aggregate input data (in world coordiantes)
-					v_position=vec3(a_position.xy,a_height); // point on the water surface
-					v_normal=normalize(vec3(a_normal, -1.0)); // inner normal to the water surface
-
-					// compute position of vertices for trianges rendering
-					gl_Position=to_clipspace(v_position);
-
-					// compute reflected and refracted lights
-					v_from_eye=from_water_to_eye(v_position);
-				}`;
-*/
+	
 		var FragmentShader =
 			`uniform sampler2D u_sky_texture;
 			uniform sampler2D u_bed_texture;
@@ -521,9 +486,9 @@ void main (void) {
 			}`;
 
 		var initShaders = function () {
-			//var fragmentShader = getShader(gl,"water_fs");
+		
     		var vertexShader = getShader(gl,"water_vs");
-			//var vertexShader = compileShader(gl, VertexShader, gl.VERTEX_SHADER);
+			
 			var fragmentShader = compileShader(gl, FragmentShader, gl.FRAGMENT_SHADER);
 			this.shaderProgram = gl.createProgram();
 			gl.attachShader(this.shaderProgram, vertexShader);
@@ -686,42 +651,12 @@ void main (void) {
 
 		var shaderProgram = null;
 
-		/*var VertexShader =
-				`uniform float u_eye_height;
-				uniform mat4 u_world_view;
-
-				attribute vec2 a_position;
-
-				varying vec3 v_position;
-				varying vec3 v_from_eye;
-
-				vec4 from_clipspace(vec2 position) {
-					return vec4(position,-1.0,1.0);
-				}
-
-				void main (void) {
-					gl_Position=vec4(a_position,0.0,1.0);
-					v_position=(from_clipspace(a_position)*u_world_view).xyz;
-				}`;*/
-
-
-		/*var FragmentShader =
-			`precision mediump float;
-			varying vec3 v_position;
-			varying vec3 v_from_eye;
-			uniform highp int u_skybox_mult;
-			uniform samplerCube u_skybox;
-			void main() {
-				gl_FragColor = textureCube(u_skybox, v_position);
-			}`;*/
-
 
 		var initShaders = function () {
 
 		var fragmentShader = getShader(gl,"skybox_fs");
     	var vertexShader = getShader(gl,"skybox_vs");
-			//var vertexShader = compileShader(gl, VertexShader, gl.VERTEX_SHADER);
-			//var fragmentShader = compileShader(gl, FragmentShader, gl.FRAGMENT_SHADER);
+		
 
 			this.shaderProgram = gl.createProgram();
 			gl.attachShader(this.shaderProgram, vertexShader);
